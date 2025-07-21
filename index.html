@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🏋️ Plan Transformare Corporală</title>
+    <title>🏋️ Plan Transformare Corporală - Tracker Complet</title>
     <style>
         * {
             margin: 0;
@@ -93,6 +93,7 @@
             color: #666;
             position: relative;
             transition: color 0.3s ease;
+            white-space: nowrap;
         }
         
         .tab.active {
@@ -116,6 +117,28 @@
         
         .tab-content.active {
             display: block;
+        }
+        
+        .day-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .day-btn {
+            padding: 10px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .day-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
         }
         
         .meal-plan {
@@ -268,6 +291,46 @@
             transform: scale(1.05);
         }
         
+        .progress-history {
+            margin-top: 30px;
+        }
+        
+        .progress-entry {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        
+        .progress-date {
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .progress-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .progress-stat {
+            font-size: 0.9em;
+        }
+        
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+        
         .shopping-list {
             columns: 2;
             column-gap: 30px;
@@ -292,6 +355,27 @@
             padding: 8px 0;
         }
         
+        .daily-total {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .daily-total h3 {
+            margin-bottom: 10px;
+        }
+        
+        .total-macros {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -304,6 +388,11 @@
             .tabs {
                 flex-wrap: nowrap;
                 -webkit-overflow-scrolling: touch;
+            }
+            
+            .progress-stats {
+                flex-direction: column;
+                gap: 5px;
             }
         }
     </style>
@@ -318,8 +407,8 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="emoji">📊</div>
-                <div class="value">53 kg</div>
-                <div class="label">Greutate Start</div>
+                <div class="value" id="current-weight">53 kg</div>
+                <div class="label">Greutate Actuală</div>
             </div>
             <div class="stat-card">
                 <div class="emoji">🎯</div>
@@ -328,13 +417,13 @@
             </div>
             <div class="stat-card">
                 <div class="emoji">📈</div>
-                <div class="value">+0.3 kg</div>
-                <div class="label">Per Săptămână</div>
+                <div class="value" id="total-gained">0 kg</div>
+                <div class="label">Total Câștigat</div>
             </div>
             <div class="stat-card">
-                <div class="emoji">🔥</div>
-                <div class="value">2,750</div>
-                <div class="label">Kcal Zile Grele</div>
+                <div class="emoji">📅</div>
+                <div class="value" id="days-count">0</div>
+                <div class="label">Zile în Program</div>
             </div>
         </div>
         
@@ -346,127 +435,548 @@
         </div>
         
         <div id="nutrition" class="tab-content active">
-            <h2>Plan Nutrițional - Zi Antrenament Greu</h2>
+            <h2>Plan Nutrițional</h2>
             
-            <div class="meal-plan">
-                <div class="meal-header">
-                    <span class="meal-time">🌅 07:00 - Mic Dejun</span>
-                    <span class="meal-calories">615 kcal</span>
+            <div class="day-selector">
+                <button class="day-btn active" onclick="showDayPlan('heavy')">🔥 Zile Grele (L/Mi/V)</button>
+                <button class="day-btn" onclick="showDayPlan('moderate')">💪 Zile Moderate (Ma/J)</button>
+                <button class="day-btn" onclick="showDayPlan('rest')">😴 Weekend (S/D)</button>
+            </div>
+            
+            <!-- ZILE GRELE -->
+            <div id="heavy-plan" class="day-plan">
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🌅 07:00 - Mic Dejun</span>
+                        <span class="meal-calories">615 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>3 ouă scrambled</span>
+                            <span>215 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Ovăz fiert (70g crud)</span>
+                            <span>260 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Banană mare</span>
+                            <span>115 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Scorțișoară</span>
+                            <span>5 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 28g</span>
+                        <span class="macro macro-c">🌾 C: 78g</span>
+                        <span class="macro macro-f">🥑 F: 19g</span>
+                    </div>
                 </div>
-                <ul class="meal-items">
-                    <li class="meal-item">
-                        <span>3 ouă scrambled</span>
-                        <span>215 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Ovăz fiert (70g crud)</span>
-                        <span>260 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Banană mare</span>
-                        <span>115 kcal</span>
-                    </li>
-                </ul>
-                <div class="macros">
-                    <span class="macro macro-p">💪 P: 28g</span>
-                    <span class="macro macro-c">🌾 C: 78g</span>
-                    <span class="macro macro-f">🥑 F: 19g</span>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🥤 10:00 - Snack 1</span>
+                        <span class="meal-calories">280 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Shake whey (30g)</span>
+                            <span>117 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Banană medie</span>
+                            <span>95 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Migdale (10g)</span>
+                            <span>65 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 28g</span>
+                        <span class="macro macro-c">🌾 C: 29g</span>
+                        <span class="macro macro-f">🥑 F: 7g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🍗 13:00 - Prânz</span>
+                        <span class="meal-calories">510 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Piept pui grill (160g crud)</span>
+                            <span>180 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Cartofi dulci (220g fierți)</span>
+                            <span>190 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Salată + ulei măsline (15ml)</span>
+                            <span>140 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 41g</span>
+                        <span class="macro macro-c">🌾 C: 48g</span>
+                        <span class="macro macro-f">🥑 F: 17g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">⚡ 15:30 - Pre-Workout</span>
+                        <span class="meal-calories">241 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Pâine integrală (2 felii)</span>
+                            <span>170 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Ou fiert tare</span>
+                            <span>71 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 14g</span>
+                        <span class="macro macro-c">🌾 C: 30.5g</span>
+                        <span class="macro macro-f">🥑 F: 7g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">💪 18:15 - Post-Workout</span>
+                        <span class="meal-calories">365 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Whey izolat (35g)</span>
+                            <span>133 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Orez alb (60g crud)</span>
+                            <span>215 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Miere (5g)</span>
+                            <span>17 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 34g</span>
+                        <span class="macro macro-c">🌾 C: 56g</span>
+                        <span class="macro macro-f">🥑 F: 1g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🍽️ 20:00 - Cină</span>
+                        <span class="meal-calories">575 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Piept pui cuptor (180g)</span>
+                            <span>215 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Quinoa (50g crud)</span>
+                            <span>185 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Broccoli + ulei (200g + 15ml)</span>
+                            <span>175 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 53g</span>
+                        <span class="macro macro-c">🌾 C: 45g</span>
+                        <span class="macro macro-f">🥑 F: 19g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🌙 21:30 - Gustare Seară</span>
+                        <span class="meal-calories">262 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Whey protein (25g)</span>
+                            <span>98 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Lapte migdale (200ml)</span>
+                            <span>35 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Unt de arahide (20g)</span>
+                            <span>126 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Scorțișoară</span>
+                            <span>3 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 26g</span>
+                        <span class="macro macro-c">🌾 C: 9g</span>
+                        <span class="macro macro-f">🥑 F: 13.5g</span>
+                    </div>
+                </div>
+                
+                <div class="daily-total">
+                    <h3>📊 TOTAL ZILNIC</h3>
+                    <div class="total-macros">
+                        <span>🔥 2,748 kcal</span>
+                        <span>💪 220g proteine</span>
+                        <span>🌾 295g carbs</span>
+                        <span>🥑 76g grăsimi</span>
+                    </div>
                 </div>
             </div>
             
-            <div class="meal-plan">
-                <div class="meal-header">
-                    <span class="meal-time">🥤 10:00 - Snack 1</span>
-                    <span class="meal-calories">280 kcal</span>
+            <!-- ZILE MODERATE -->
+            <div id="moderate-plan" class="day-plan" style="display:none;">
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🌅 07:00 - Mic Dejun</span>
+                        <span class="meal-calories">520 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>2 ouă + 2 albușuri omletă</span>
+                            <span>180 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Ovăz (60g)</span>
+                            <span>220 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>1/2 avocado</span>
+                            <span>120 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 26g</span>
+                        <span class="macro macro-c">🌾 C: 55g</span>
+                        <span class="macro macro-f">🥑 F: 20g</span>
+                    </div>
                 </div>
-                <ul class="meal-items">
-                    <li class="meal-item">
-                        <span>Shake whey (30g)</span>
-                        <span>117 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Banană medie</span>
-                        <span>95 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Migdale (10g)</span>
-                        <span>65 kcal</span>
-                    </li>
-                </ul>
-                <div class="macros">
-                    <span class="macro macro-p">💪 P: 28g</span>
-                    <span class="macro macro-c">🌾 C: 29g</span>
-                    <span class="macro macro-f">🥑 F: 7g</span>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🥤 10:00 - Snack</span>
+                        <span class="meal-calories">250 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Shake whey (25g)</span>
+                            <span>95 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Măr mare</span>
+                            <span>95 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Nuci (10g)</span>
+                            <span>60 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 25g</span>
+                        <span class="macro macro-c">🌾 C: 20g</span>
+                        <span class="macro macro-f">🥑 F: 8g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🍗 13:00 - Prânz</span>
+                        <span class="meal-calories">480 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Piept curcan (170g)</span>
+                            <span>200 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Orez brun (200g fiert)</span>
+                            <span>220 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Salată + ulei</span>
+                            <span>60 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 45g</span>
+                        <span class="macro macro-c">🌾 C: 50g</span>
+                        <span class="macro macro-f">🥑 F: 12g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">⚡ 16:00 - Pre-Workout</span>
+                        <span class="meal-calories">200 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Pâine (1 felie) + unt arahide (10g)</span>
+                            <span>150 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>1/2 banană</span>
+                            <span>50 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 12g</span>
+                        <span class="macro macro-c">🌾 C: 25g</span>
+                        <span class="macro macro-f">🥑 F: 6g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🥩 19:00 - Cină</span>
+                        <span class="meal-calories">550 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Vită slabă (150g)</span>
+                            <span>240 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Cartofi normali (200g)</span>
+                            <span>160 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Legume + ulei (15ml)</span>
+                            <span>150 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 47g</span>
+                        <span class="macro macro-c">🌾 C: 54g</span>
+                        <span class="macro macro-f">🥑 F: 20g</span>
+                    </div>
+                </div>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🌙 21:00 - Seară</span>
+                        <span class="meal-calories">250 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Shake: whey (25g)</span>
+                            <span>95 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Lapte migdale (200ml)</span>
+                            <span>35 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Unt arahide (15g)</span>
+                            <span>95 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 25g</span>
+                        <span class="macro macro-c">🌾 C: 8g</span>
+                        <span class="macro macro-f">🥑 F: 13g</span>
+                    </div>
+                </div>
+                
+                <div class="daily-total">
+                    <h3>📊 TOTAL ZILNIC</h3>
+                    <div class="total-macros">
+                        <span>🔥 2,650 kcal</span>
+                        <span>💪 215g proteine</span>
+                        <span>🌾 260g carbs</span>
+                        <span>🥑 82g grăsimi</span>
+                    </div>
                 </div>
             </div>
             
-            <div class="meal-plan">
-                <div class="meal-header">
-                    <span class="meal-time">🍗 13:00 - Prânz</span>
-                    <span class="meal-calories">510 kcal</span>
+            <!-- ZILE ODIHNĂ -->
+            <div id="rest-plan" class="day-plan" style="display:none;">
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🌅 08:00 - Mic Dejun</span>
+                        <span class="meal-calories">580 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>3 ouă scrambled cu unt</span>
+                            <span>280 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>2 felii bacon</span>
+                            <span>90 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>1 felie pâine integrală</span>
+                            <span>80 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Roșii cherry (100g)</span>
+                            <span>20 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 30g</span>
+                        <span class="macro macro-c">🌾 C: 35g</span>
+                        <span class="macro macro-f">🥑 F: 35g</span>
+                    </div>
                 </div>
-                <ul class="meal-items">
-                    <li class="meal-item">
-                        <span>Piept pui grill (160g)</span>
-                        <span>180 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Cartofi dulci (220g)</span>
-                        <span>190 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Salată + ulei măsline</span>
-                        <span>140 kcal</span>
-                    </li>
-                </ul>
-                <div class="macros">
-                    <span class="macro macro-p">💪 P: 41g</span>
-                    <span class="macro macro-c">🌾 C: 48g</span>
-                    <span class="macro macro-f">🥑 F: 17g</span>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🥤 11:00 - Brunch</span>
+                        <span class="meal-calories">320 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Smoothie: whey (20g)</span>
+                            <span>80 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Lapte cocos (200ml)</span>
+                            <span>60 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Fructe pădure (100g)</span>
+                            <span>50 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Unt migdale (15g)</span>
+                            <span>90 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 20g</span>
+                        <span class="macro macro-c">🌾 C: 25g</span>
+                        <span class="macro macro-f">🥑 F: 15g</span>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="meal-plan">
-                <div class="meal-header">
-                    <span class="meal-time">⚡ 15:30 - Pre-Workout</span>
-                    <span class="meal-calories">241 kcal</span>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🍗 14:00 - Prânz</span>
+                        <span class="meal-calories">500 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Pui la cuptor (170g)</span>
+                            <span>200 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Legume rădăcinoase (150g)</span>
+                            <span>120 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Salată + ulei</span>
+                            <span>80 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 45g</span>
+                        <span class="macro macro-c">🌾 C: 40g</span>
+                        <span class="macro macro-f">🥑 F: 18g</span>
+                    </div>
                 </div>
-                <ul class="meal-items">
-                    <li class="meal-item">
-                        <span>Pâine integrală (2 felii)</span>
-                        <span>170 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Ou fiert</span>
-                        <span>71 kcal</span>
-                    </li>
-                </ul>
-                <div class="macros">
-                    <span class="macro macro-p">💪 P: 14g</span>
-                    <span class="macro macro-c">🌾 C: 30.5g</span>
-                    <span class="macro macro-f">🥑 F: 7g</span>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🥜 17:00 - Gustare</span>
+                        <span class="meal-calories">300 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Mix: migdale (20g) + nuci (15g)</span>
+                            <span>220 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Măr mic</span>
+                            <span>80 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 15g</span>
+                        <span class="macro macro-c">🌾 C: 20g</span>
+                        <span class="macro macro-f">🥑 F: 18g</span>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="meal-plan">
-                <div class="meal-header">
-                    <span class="meal-time">💪 18:15 - Post-Workout</span>
-                    <span class="meal-calories">365 kcal</span>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🍽️ 19:30 - Cină</span>
+                        <span class="meal-calories">450 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Pește alb/pui (180g)</span>
+                            <span>180 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Quinoa (150g fiartă)</span>
+                            <span>180 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Legume verzi</span>
+                            <span>90 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 50g</span>
+                        <span class="macro macro-c">🌾 C: 40g</span>
+                        <span class="macro macro-f">🥑 F: 10g</span>
+                    </div>
                 </div>
-                <ul class="meal-items">
-                    <li class="meal-item">
-                        <span>Whey izolat (35g)</span>
-                        <span>133 kcal</span>
-                    </li>
-                    <li class="meal-item">
-                        <span>Orez alb (60g crud)</span>
-                        <span>215 kcal</span>
-                    </li>
-                </ul>
-                <div class="macros">
-                    <span class="macro macro-p">💪 P: 34g</span>
-                    <span class="macro macro-c">🌾 C: 56g</span>
-                    <span class="macro macro-f">🥑 F: 1g</span>
+                
+                <div class="meal-plan">
+                    <div class="meal-header">
+                        <span class="meal-time">🌙 21:30 - Seară</span>
+                        <span class="meal-calories">250 kcal</span>
+                    </div>
+                    <ul class="meal-items">
+                        <li class="meal-item">
+                            <span>Shake whey (25g)</span>
+                            <span>95 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Lapte migdale (200ml)</span>
+                            <span>35 kcal</span>
+                        </li>
+                        <li class="meal-item">
+                            <span>Unt arahide (15g)</span>
+                            <span>95 kcal</span>
+                        </li>
+                    </ul>
+                    <div class="macros">
+                        <span class="macro macro-p">💪 P: 25g</span>
+                        <span class="macro macro-c">🌾 C: 10g</span>
+                        <span class="macro macro-f">🥑 F: 12g</span>
+                    </div>
+                </div>
+                
+                <div class="daily-total">
+                    <h3>📊 TOTAL ZILNIC</h3>
+                    <div class="total-macros">
+                        <span>🔥 2,400 kcal</span>
+                        <span>💪 205g proteine</span>
+                        <span>🌾 180g carbs</span>
+                        <span>🥑 95g grăsimi</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -478,23 +988,23 @@
                 <div class="supplement-card">
                     <h3>🌅 Dimineața (06:30)</h3>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="creatine-am">
                         <span>Creatină Monohidrat - 5g</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="vitd-am">
                         <span>Vitamina D3 - 4000 IU</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="omega-am">
                         <span>Omega-3 - 2g EPA+DHA</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="bcomplex-am">
                         <span>Complex B - 1 tabletă</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="zinc-am">
                         <span>Zinc - 20mg</span>
                     </div>
                 </div>
@@ -502,32 +1012,52 @@
                 <div class="supplement-card">
                     <h3>⚡ Pre-Workout (15:30)</h3>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="citrulline-pre">
                         <span>Citrulină Malat - 6g</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="beta-pre">
                         <span>Beta-Alanină - 3g</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="ala-pre">
                         <span>Acid Alfa Lipoic - 300mg</span>
+                    </div>
+                    <div class="supplement-item">
+                        <input type="checkbox" class="checkbox" data-supplement="caffeine-pre">
+                        <span>Cofeină (opțional) - 200mg</span>
+                    </div>
+                </div>
+                
+                <div class="supplement-card">
+                    <h3>💪 Post-Workout (18:15)</h3>
+                    <div class="supplement-item">
+                        <input type="checkbox" class="checkbox" data-supplement="vitc-post">
+                        <span>Vitamina C - 1000mg</span>
+                    </div>
+                    <div class="supplement-item">
+                        <input type="checkbox" class="checkbox" data-supplement="taurine-post">
+                        <span>Taurină (zile grele) - 1g</span>
                     </div>
                 </div>
                 
                 <div class="supplement-card">
                     <h3>🌙 Seara (21:30)</h3>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="mag-pm">
                         <span>Magneziu Glicinat - 400mg</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="ashwa-pm">
                         <span>Ashwagandha - 600mg</span>
                     </div>
                     <div class="supplement-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-supplement="theanine-pm">
                         <span>L-Theanine - 200mg</span>
+                    </div>
+                    <div class="supplement-item">
+                        <input type="checkbox" class="checkbox" data-supplement="zinc-pm">
+                        <span>Zinc (dacă nu dimineața) - 10mg</span>
                     </div>
                 </div>
             </div>
@@ -537,30 +1067,49 @@
             <h2>Tracking Progres</h2>
             
             <div class="progress-tracker">
-                <h3>📊 Măsurători Săptămânale</h3>
+                <h3>📊 Adaugă Măsurători Noi</h3>
                 <div class="progress-input">
                     <div class="input-group">
+                        <label>Data</label>
+                        <input type="date" id="progress-date" value="">
+                    </div>
+                    <div class="input-group">
                         <label>Greutate (kg)</label>
-                        <input type="number" step="0.1" placeholder="53.0">
+                        <input type="number" id="progress-weight" step="0.1" placeholder="53.0">
                     </div>
                     <div class="input-group">
                         <label>Talie (cm)</label>
-                        <input type="number" placeholder="0">
+                        <input type="number" id="progress-waist" placeholder="0">
                     </div>
                     <div class="input-group">
                         <label>Braț (cm)</label>
-                        <input type="number" placeholder="0">
+                        <input type="number" id="progress-arm" placeholder="0">
                     </div>
                     <div class="input-group">
                         <label>Piept (cm)</label>
-                        <input type="number" placeholder="0">
+                        <input type="number" id="progress-chest" placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Coapsă (cm)</label>
+                        <input type="number" id="progress-thigh" placeholder="0">
                     </div>
                     <div class="input-group">
                         <label>Energie (1-10)</label>
-                        <input type="number" min="1" max="10" placeholder="7">
+                        <input type="number" id="progress-energy" min="1" max="10" placeholder="7">
+                    </div>
+                    <div class="input-group">
+                        <label>Note</label>
+                        <input type="text" id="progress-notes" placeholder="Observații...">
                     </div>
                 </div>
-                <button class="save-button">💾 Salvează Progresul</button>
+                <button class="save-button" onclick="saveProgress()">💾 Salvează Progresul</button>
+            </div>
+            
+            <div class="progress-history">
+                <h3>📈 Istoric Progres</h3>
+                <div id="progress-list">
+                    <!-- Progress entries will be added here -->
+                </div>
             </div>
         </div>
         
@@ -571,84 +1120,124 @@
                 <div class="shopping-category">
                     <h3>🍗 Proteine</h3>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="chicken">
                         <span>Piept pui/curcan - 2kg</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="beef">
                         <span>Vită slabă - 300g</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
-                        <span>Ouă - 30 buc</span>
+                        <input type="checkbox" class="checkbox" data-item="eggs">
+                        <span>Ouă - 30 buc (5 cutii)</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="bacon">
                         <span>Bacon - 200g</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="whey">
+                        <span>Whey protein - check stoc</span>
                     </div>
                 </div>
                 
                 <div class="shopping-category">
                     <h3>🌾 Carbohidrați</h3>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="oats">
                         <span>Ovăz - 600g</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="rice-white">
                         <span>Orez alb - 500g</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="rice-brown">
+                        <span>Orez brun - 400g</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="sweet-potato">
                         <span>Cartofi dulci - 1.5kg</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="potato">
+                        <span>Cartofi normali - 1kg</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="quinoa">
                         <span>Quinoa - 300g</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="bread">
+                        <span>Pâine integrală - 2 pâini</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="bananas">
                         <span>Banane - 15 buc</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="apples">
+                        <span>Mere - 7 buc</span>
                     </div>
                 </div>
                 
                 <div class="shopping-category">
                     <h3>🥑 Grăsimi</h3>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
-                        <span>Migdale - 150g</span>
+                        <input type="checkbox" class="checkbox" data-item="almonds">
+                        <span>Migdale crude - 150g</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
-                        <span>Unt arahide - 300g</span>
+                        <input type="checkbox" class="checkbox" data-item="walnuts">
+                        <span>Nuci - 100g</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="peanut-butter">
+                        <span>Unt arahide natural - 300g</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="olive-oil">
+                        <span>Ulei măsline extravirgin</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="avocado">
                         <span>Avocado - 2-3 buc</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
-                        <span>Ulei măsline</span>
+                        <input type="checkbox" class="checkbox" data-item="butter">
+                        <span>Unt 82% - 200g</span>
                     </div>
                 </div>
                 
                 <div class="shopping-category">
                     <h3>🥬 Altele</h3>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="almond-milk">
                         <span>Lapte migdale - 2L</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="broccoli">
                         <span>Broccoli - 1.5kg</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="salad">
                         <span>Salată verde - 1kg</span>
                     </div>
                     <div class="shopping-item">
-                        <input type="checkbox" class="checkbox">
+                        <input type="checkbox" class="checkbox" data-item="mixed-veg">
                         <span>Legume mixte - 1kg</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="bcaa">
+                        <span>BCAA - check stoc</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="honey">
+                        <span>Miere naturală - 250g</span>
+                    </div>
+                    <div class="shopping-item">
+                        <input type="checkbox" class="checkbox" data-item="cinnamon">
+                        <span>Scorțișoară pudră</span>
                     </div>
                 </div>
             </div>
@@ -656,58 +1245,213 @@
     </div>
     
     <script>
+        // Initialize date input with today's date
+        document.getElementById('progress-date').valueAsDate = new Date();
+        
+        // Tab functionality
         function showTab(tabName) {
-            // Hide all tabs
             const tabs = document.querySelectorAll('.tab-content');
             tabs.forEach(tab => tab.classList.remove('active'));
             
-            // Remove active class from all tab buttons
             const buttons = document.querySelectorAll('.tab');
             buttons.forEach(btn => btn.classList.remove('active'));
             
-            // Show selected tab
             document.getElementById(tabName).classList.add('active');
-            
-            // Add active class to clicked button
             event.target.classList.add('active');
         }
         
-        // Save data to localStorage
-        function saveData() {
-            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-            const data = {};
+        // Day plan functionality
+        function showDayPlan(planType) {
+            const plans = document.querySelectorAll('.day-plan');
+            plans.forEach(plan => plan.style.display = 'none');
             
-            checkboxes.forEach((checkbox, index) => {
-                data[`checkbox_${index}`] = checkbox.checked;
-            });
+            const buttons = document.querySelectorAll('.day-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
             
-            localStorage.setItem('trackerData', JSON.stringify(data));
+            document.getElementById(planType + '-plan').style.display = 'block';
+            event.target.classList.add('active');
         }
         
-        // Load data from localStorage
-        function loadData() {
-            const savedData = localStorage.getItem('trackerData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-                const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        // Progress tracking
+        let progressData = JSON.parse(localStorage.getItem('progressData')) || [];
+        
+        function saveProgress() {
+            const date = document.getElementById('progress-date').value;
+            const weight = document.getElementById('progress-weight').value;
+            const waist = document.getElementById('progress-waist').value;
+            const arm = document.getElementById('progress-arm').value;
+            const chest = document.getElementById('progress-chest').value;
+            const thigh = document.getElementById('progress-thigh').value;
+            const energy = document.getElementById('progress-energy').value;
+            const notes = document.getElementById('progress-notes').value;
+            
+            if (!date || !weight) {
+                alert('Te rog completează cel puțin data și greutatea!');
+                return;
+            }
+            
+            const entry = {
+                id: Date.now(),
+                date: date,
+                weight: parseFloat(weight),
+                waist: waist || '-',
+                arm: arm || '-',
+                chest: chest || '-',
+                thigh: thigh || '-',
+                energy: energy || '-',
+                notes: notes || ''
+            };
+            
+            progressData.push(entry);
+            progressData.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            localStorage.setItem('progressData', JSON.stringify(progressData));
+            
+            // Clear form
+            document.getElementById('progress-weight').value = '';
+            document.getElementById('progress-waist').value = '';
+            document.getElementById('progress-arm').value = '';
+            document.getElementById('progress-chest').value = '';
+            document.getElementById('progress-thigh').value = '';
+            document.getElementById('progress-energy').value = '';
+            document.getElementById('progress-notes').value = '';
+            
+            displayProgress();
+            updateStats();
+            
+            alert('Progres salvat cu succes! 💪');
+        }
+        
+        function displayProgress() {
+            const listContainer = document.getElementById('progress-list');
+            listContainer.innerHTML = '';
+            
+            progressData.forEach(entry => {
+                const entryDiv = document.createElement('div');
+                entryDiv.className = 'progress-entry';
                 
-                checkboxes.forEach((checkbox, index) => {
-                    if (data[`checkbox_${index}`] !== undefined) {
-                        checkbox.checked = data[`checkbox_${index}`];
-                    }
+                const dateFormatted = new Date(entry.date).toLocaleDateString('ro-RO', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
                 });
+                
+                entryDiv.innerHTML = `
+                    <div>
+                        <div class="progress-date">${dateFormatted}</div>
+                        <div class="progress-stats">
+                            <span class="progress-stat">⚖️ ${entry.weight} kg</span>
+                            <span class="progress-stat">📏 Talie: ${entry.waist} cm</span>
+                            <span class="progress-stat">💪 Braț: ${entry.arm} cm</span>
+                            <span class="progress-stat">🎯 Piept: ${entry.chest} cm</span>
+                            <span class="progress-stat">🦵 Coapsă: ${entry.thigh} cm</span>
+                            <span class="progress-stat">⚡ Energie: ${entry.energy}/10</span>
+                        </div>
+                        ${entry.notes ? `<div style="margin-top: 5px; font-style: italic; color: #666;">📝 ${entry.notes}</div>` : ''}
+                    </div>
+                    <button class="delete-btn" onclick="deleteProgress(${entry.id})">🗑️ Șterge</button>
+                `;
+                
+                listContainer.appendChild(entryDiv);
+            });
+        }
+        
+        function deleteProgress(id) {
+            if (confirm('Sigur vrei să ștergi această înregistrare?')) {
+                progressData = progressData.filter(entry => entry.id !== id);
+                localStorage.setItem('progressData', JSON.stringify(progressData));
+                displayProgress();
+                updateStats();
             }
         }
         
-        // Add event listeners to all checkboxes
-        document.addEventListener('DOMContentLoaded', () => {
-            loadData();
+        function updateStats() {
+            if (progressData.length > 0) {
+                const latestWeight = progressData[0].weight;
+                const startWeight = 53;
+                const gained = (latestWeight - startWeight).toFixed(1);
+                
+                document.getElementById('current-weight').textContent = latestWeight + ' kg';
+                document.getElementById('total-gained').textContent = (gained > 0 ? '+' : '') + gained + ' kg';
+                
+                // Calculate days in program
+                const startDate = new Date('2024-01-01'); // Adjust this to your actual start date
+                const today = new Date();
+                const days = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+                document.getElementById('days-count').textContent = days;
+            }
+        }
+        
+        // Save checkbox states
+        function saveCheckboxState() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const states = {};
             
+            checkboxes.forEach(checkbox => {
+                const id = checkbox.getAttribute('data-supplement') || 
+                           checkbox.getAttribute('data-item') || 
+                           checkbox.id;
+                if (id) {
+                    states[id] = checkbox.checked;
+                }
+            });
+            
+            localStorage.setItem('checkboxStates', JSON.stringify(states));
+        }
+        
+        // Load saved data
+        function loadSavedData() {
+            // Load checkbox states
+            const savedStates = JSON.parse(localStorage.getItem('checkboxStates')) || {};
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            
+            checkboxes.forEach(checkbox => {
+                const id = checkbox.getAttribute('data-supplement') || 
+                           checkbox.getAttribute('data-item') || 
+                           checkbox.id;
+                if (id && savedStates[id] !== undefined) {
+                    checkbox.checked = savedStates[id];
+                }
+            });
+            
+            // Load and display progress
+            displayProgress();
+            updateStats();
+        }
+        
+        // Add event listeners
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSavedData();
+            
+            // Add listeners to all checkboxes
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', saveData);
+                checkbox.addEventListener('change', saveCheckboxState);
             });
         });
+        
+        // Reset daily checkboxes at midnight
+        function resetDailyCheckboxes() {
+            const lastReset = localStorage.getItem('lastReset');
+            const today = new Date().toDateString();
+            
+            if (lastReset !== today) {
+                // Reset supplement checkboxes
+                const supplementCheckboxes = document.querySelectorAll('[data-supplement]');
+                supplementCheckboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+                
+                localStorage.setItem('lastReset', today);
+                saveCheckboxState();
+            }
+        }
+        
+        // Check for reset on load
+        resetDailyCheckboxes();
+        
+        // Check every hour
+        setInterval(resetDailyCheckboxes, 3600000);
     </script>
 </body>
 </html>
