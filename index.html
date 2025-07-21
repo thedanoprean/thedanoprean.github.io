@@ -376,6 +376,159 @@
             font-weight: bold;
         }
         
+        .workout-week {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .workout-day {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .workout-day.weekend {
+            background: linear-gradient(135deg, #e3f2fd 0%, #f3e5f5 100%);
+        }
+        
+        .workout-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .workout-header h3 {
+            color: #333;
+            margin: 0;
+        }
+        
+        .workout-duration {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .exercise-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease;
+        }
+        
+        .exercise-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .exercise-card h4 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .exercise-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .sets-reps {
+            background: #e3f2fd;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-weight: 600;
+            color: #1976d2;
+        }
+        
+        .rest-time {
+            background: #fff3e0;
+            padding: 5px 12px;
+            border-radius: 15px;
+            color: #f57c00;
+        }
+        
+        .exercise-tips {
+            background: #f3e5f5;
+            padding: 10px 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-size: 0.9em;
+            color: #6a1b9a;
+        }
+        
+        .exercise-tracking {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-top: 15px;
+        }
+        
+        .weight-input {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        .weight-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .exercise-check {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .rest-day {
+            background: linear-gradient(135deg, #c8e6c9 0%, #dcedc8 100%);
+        }
+        
+        .rest-activities {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .rest-activities li {
+            padding: 8px 0;
+            color: #2e7d32;
+        }
+        
+        .workout-notes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .note-card {
+            background: linear-gradient(135deg, #fce4ec 0%, #f8bbd0 100%);
+            padding: 20px;
+            border-radius: 15px;
+        }
+        
+        .note-card h4 {
+            color: #c2185b;
+            margin-bottom: 10px;
+        }
+        
+        .note-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
         @media (max-width: 768px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -429,6 +582,7 @@
         
         <div class="tabs">
             <button class="tab active" onclick="showTab('nutrition')">🍽️ Nutriție</button>
+            <button class="tab" onclick="showTab('workout')">🏋️ Antrenament</button>
             <button class="tab" onclick="showTab('supplements')">💊 Suplimente</button>
             <button class="tab" onclick="showTab('progress')">📈 Progres</button>
             <button class="tab" onclick="showTab('shopping')">🛒 Shopping</button>
@@ -977,6 +1131,619 @@
                         <span>🌾 180g carbs</span>
                         <span>🥑 95g grăsimi</span>
                     </div>
+                </div>
+            </div>
+        </div>
+        
+        <div id="workout" class="tab-content">
+            <h2>Program Antrenament - 5 Zile</h2>
+            
+            <div class="workout-week">
+                <div class="workout-day">
+                    <div class="workout-header">
+                        <h3>🔥 LUNI - PIEPT & TRICEPS</h3>
+                        <span class="workout-duration">⏱️ 60-75 min</span>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🏋️ Împins la Piept cu Bara (Bench Press)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">4 seturi × 8-10 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2-3 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Coboară bara controlat până atingi pieptul, împinge exploziv
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🏋️ Împins Înclinat cu Gantere</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10-12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Bancă la 30-45°, coboară ganterele lateral până simți stretch
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🦋 Fluturări la Piept (Cable/Gantere)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1.5 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Mișcare arcuită, concentrează-te pe contracție la final
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💪 Dips (Paralele)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 8-12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Înclină corpul înainte pentru piept, folosește asistat dacă e nevoie
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Asistat/Greutate+" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🔻 Extensii Triceps la Cablu</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10-12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1.5 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Coate lipite de corp, doar antebrațul se mișcă
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💎 Extensii Deasupra Capului</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1.5 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Ganteră sau cablu, coate fixe, stretch maxim
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workout-day">
+                    <div class="workout-header">
+                        <h3>💪 MARȚI - SPATE & BICEPS</h3>
+                        <span class="workout-duration">⏱️ 60-75 min</span>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🎯 Tracțiuni (Pull-ups/Lat Pulldown)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">4 seturi × 6-10 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2-3 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Priză medie, trage cu spatele nu cu brațele, piept spre bară
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Asistat/Greutate+" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🚣 Ramat cu Bara (Barbell Row)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">4 seturi × 8-10 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Spate drept, trage spre abdomen, strânge omoplatii
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🏹 Ramat cu Gantera (1 braț)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10-12 per braț</span>
+                            <span class="rest-time">⏱️ Pauză: 1.5 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Sprijin pe bancă, rotație ușoară, stretch complet
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🔗 Ramat la Cablu Șezând</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1.5 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Priză strânsă, trage spre abdomen, pauză la contracție
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💪 Flexii Biceps cu Bara</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10-12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1.5 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Coate fixe, fără balans, control total
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🔨 Hammer Curls</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Priză neutră, alternează brațele sau simultan
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🎪 Flexii la Bancă Înclinată</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10-12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Stretch maxim, fără balans din umăr
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workout-day">
+                    <div class="workout-header">
+                        <h3>🦵 MIERCURI - PICIOARE</h3>
+                        <span class="workout-duration">⏱️ 75-90 min</span>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>👑 Genuflexiuni cu Bara (Squats)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">4 seturi × 8-10 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 3-4 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Sub paralel, genunchi în linie cu degetele, spate drept
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🦵 Presă Picioare</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Picioare lat de umeri, coboară până la 90°
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🚶 Fandări (Walking Lunges)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10 per picior</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Pas lung, genunchi 90°, corp drept
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🏋️ Îndreptări Românești (RDL)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">4 seturi × 10-12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Genunchi ușor flexați, împinge șoldurile înapoi, simte stretch
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💪 Leg Curls</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1.5 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Control total, pauză sus, coboară încet
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🦶 Ridicări pe Vârfuri</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">4 seturi × 15-20 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Pauză sus 1 sec, stretch complet jos
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workout-day">
+                    <div class="workout-header">
+                        <h3>🎯 JOI - UMERI & ABS</h3>
+                        <span class="workout-duration">⏱️ 60 min</span>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🏋️ Presă Militară (Overhead Press)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">4 seturi × 8-10 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Core încordat, împinge vertical, fără arcuire
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🦅 Ridicări Laterale</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Coate ușor flexate, ridică până la înălțimea umerilor
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🎯 Ridicări Posterioare</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12-15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Aplecat înainte, brațe spre lateral-spate
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💪 Face Pulls</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 15-20 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Cablu la înălțimea feței, trage și rotește extern
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🎯 Plank</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 30-60 secunde</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Corp drept, respirație normală, abdomen contractat
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Durată (sec)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🔄 Bicycle Crunches</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 20 per parte</span>
+                            <span class="rest-time">⏱️ Pauză: 45 sec</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Cot spre genunchiul opus, control total
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Repetări" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🦵 Ridicări de Genunchi</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 15-20 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 45 sec</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Atârnat sau pe coate, ridică genunchii la piept
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Repetări" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workout-day">
+                    <div class="workout-header">
+                        <h3>⚡ VINERI - FULL BODY POWER</h3>
+                        <span class="workout-duration">⏱️ 60 min</span>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💀 Îndreptări (Deadlifts)</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 5-8 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 3-4 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Spate drept, bara lipită de corp, împinge podeaua
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🏋️ Împins la Piept</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Greutate mai ușoară ca Luni, focus pe formă
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🎯 Tracțiuni Lat</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 10-12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Priză largă, trage cu latissimus
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🦵 Genuflexiuni Goblet</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 12 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Ganteră la piept, coate între genunchi
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🎯 Ridicări Laterale</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 15 repetări</span>
+                            <span class="rest-time">⏱️ Pauză: 1 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Greutate ușoară, formă perfectă
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💪 Farmer's Walk</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">3 seturi × 30-40 metri</span>
+                            <span class="rest-time">⏱️ Pauză: 2 min</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Gantere grele, mers controlat, core încordat
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Greutate folosită (kg)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workout-day weekend">
+                    <div class="workout-header">
+                        <h3>🚶 SÂMBĂTĂ - CARDIO & MOBILITATE</h3>
+                        <span class="workout-duration">⏱️ 30-45 min</span>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🚶 LISS Cardio</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">30-40 minute</span>
+                            <span class="rest-time">Ritm constant</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Mers rapid, bicicletă sau eliptică la 65-75% puls maxim
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="text" placeholder="Durată (min)" class="weight-input">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>🧘 Stretching Full Body</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">15-20 minute</span>
+                            <span class="rest-time">30 sec per poziție</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Focus pe zonele tensionate, respirație profundă
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-card">
+                        <h4>💆 Foam Rolling</h4>
+                        <div class="exercise-details">
+                            <span class="sets-reps">10 minute</span>
+                            <span class="rest-time">1 min per grupă</span>
+                        </div>
+                        <div class="exercise-tips">
+                            💡 Picioare, spate, IT band - presiune moderată
+                        </div>
+                        <div class="exercise-tracking">
+                            <input type="checkbox" class="exercise-check"> Completat
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="workout-day weekend">
+                    <div class="workout-header">
+                        <h3>😴 DUMINICĂ - ODIHNĂ COMPLETĂ</h3>
+                        <span class="workout-duration">⏱️ Recovery Day</span>
+                    </div>
+                    
+                    <div class="exercise-card rest-day">
+                        <h4>🧘 Activități Opționale</h4>
+                        <ul class="rest-activities">
+                            <li>✅ Plimbare ușoară 20-30 min</li>
+                            <li>✅ Yoga/Stretching ușor</li>
+                            <li>✅ Masaj/Auto-masaj</li>
+                            <li>✅ Saună (dacă ai acces)</li>
+                            <li>✅ Meditație 10 min</li>
+                            <li>✅ Meal prep pentru săptămână</li>
+                        </ul>
+                        <div class="exercise-tips">
+                            💡 Focus pe recuperare, hidratare, somn de calitate
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="workout-notes">
+                <h3>📝 Note Importante</h3>
+                <div class="note-card">
+                    <h4>🎯 Progresie</h4>
+                    <p>Crește greutatea cu 2.5-5kg când poți face toate repetările cu formă perfectă</p>
+                </div>
+                <div class="note-card">
+                    <h4>⏱️ Încălzire</h4>
+                    <p>5-10 min cardio ușor + seturi de încălzire cu greutăți mici înainte de fiecare exercițiu</p>
+                </div>
+                <div class="note-card">
+                    <h4>💪 Formă > Greutate</h4>
+                    <p>Tehnica corectă întotdeauna! Mai bine greutăți mici cu formă perfectă</p>
+                </div>
+                <div class="note-card">
+                    <h4>🔄 Deload Week</h4>
+                    <p>La fiecare 4-6 săptămâni, reduce greutățile cu 40-50% pentru recuperare</p>
                 </div>
             </div>
         </div>
